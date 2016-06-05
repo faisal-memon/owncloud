@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
 #RUN pecl install APCu-4.0.10 redis memcached \
 #	&& docker-php-ext-enable apcu redis memcached
 
-ENV OWNCLOUD_VERSION 8.2.4
+ENV OWNCLOUD_VERSION 8.2.5
 VOLUME /var/www/html
 
 RUN curl -k -fsSL -o owncloud.tar.bz2 \
