@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 	libpq-dev \
 	libxml2-dev \
 	curl \
+	cron \
 	php5 \
 	php5-fpm \
 	php5-mysql \
@@ -60,6 +61,5 @@ COPY docker-entrypoint.sh /entrypoint.sh
 #RUN ln -sf /dev/stdout /var/log/php5-fpm.log
 
 ENTRYPOINT ["/entrypoint.sh"]
-#ENTRYPOINT ["/bin/sh"]
 CMD ["php5-fpm", "-F"]
 #CMD ["bash"]
