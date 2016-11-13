@@ -1,5 +1,10 @@
 FROM resin/rpi-raspbian:latest
 
+RUN echo "deb http://repozytorium.mati75.eu/raspbian jessie-backports main contrib non-free" > /etc/apt/sources.list.d/php7.list
+
+RUN gpg --keyserver pgpkeys.mit.edu --recv-key CCD91D6111A06851 && \
+     gpg --armor --export CCD91D6111A06851 | apt-key add -
+
 RUN apt-get update && apt-get install -y \
 	bzip2 \
 	libcurl4-openssl-dev \
@@ -12,15 +17,15 @@ RUN apt-get update && apt-get install -y \
 	libpq-dev \
 	libxml2-dev \
 	curl \
-	cron \
-	php5 \
-	php5-fpm \
-	php5-mysql \
-	php5-curl \
-	php5-gd \
-	php5-apcu \
+	php7.0 \
+	php7.0-fpm \
+	php7.0-mysql \
+	php7.0-curl \
+	php7.0-gd \
 	&& rm -rf /var/lib/apt/lists/*
+# php5-apcu \
 
+#
 # https://doc.owncloud.org/server/8.1/admin_manual/installation/source_installation.html#prerequisites
 #RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
 #	&& docker-php-ext-install gd exif intl mbstring mcrypt mysql opcache pdo_mysql pdo_pgsql pgsql zip
@@ -40,7 +45,7 @@ RUN apt-get update && apt-get install -y \
 #RUN pecl install APCu-4.0.10 redis memcached \
 #	&& docker-php-ext-enable apcu redis memcached
 
-ENV OWNCLOUD_VERSION 8.2.7
+ENV OWNCLOUD_VERSION 8.2.5
 VOLUME /var/www/html
 
 RUN curl -k -fsSL -o owncloud.tar.bz2 \
@@ -61,5 +66,9 @@ COPY docker-entrypoint.sh /entrypoint.sh
 #RUN ln -sf /dev/stdout /var/log/php5-fpm.log
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["php5-fpm", "-F"]
+
+RUN mkdir /run/php
+#ENTRYPOINT ["/bin/sh"]
+#CMD ["php5-fpm", "-F"]
+CMD ["php-fpm7.0", "-F"]
 #CMD ["bash"]
