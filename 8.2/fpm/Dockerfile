@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y \
 #	&& pecl install redis-2.2.8 \
 #	&& docker-php-ext-enable apcu memcached redis
 
-ENV OWNCLOUD_VERSION 8.2.7
+ENV OWNCLOUD_VERSION 8.2.9
 VOLUME /var/www/html
 
 RUN curl -k -fsSL -o owncloud.tar.bz2 \
