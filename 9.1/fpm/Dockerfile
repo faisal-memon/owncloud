@@ -1,8 +1,10 @@
 FROM resin/rpi-raspbian:latest
 
+
 RUN apt-get update && apt-get install -y \
 	bzip2 \
 	libcurl4-openssl-dev \
+        libpng-dev \
 	libfreetype6-dev \
 	libicu-dev \
 	libjpeg-dev \
@@ -13,13 +15,20 @@ RUN apt-get update && apt-get install -y \
 	libpq-dev \
 	libxml2-dev \
 	curl \
-	cron \
-	php5 \
-	php5-fpm \
-	php5-mysql \
-	php5-curl \
-	php5-gd \
-	php5-apcu \
+	cron
+
+RUN echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" >> /etc/apt/sources.list
+
+RUN apt-get update && apt-get install -y \
+	php7.0 \
+	php7.0-fpm \
+	php7.0-mysql \
+	php7.0-curl \
+	php7.0-gd \
+	php7.0-apcu \
+        php7.0-xml \
+        php7.0-zip \
+        php7.0-mbstring \
 	&& rm -rf /var/lib/apt/lists/*
 
 # https://doc.owncloud.org/server/8.1/admin_manual/installation/source_installation.html#prerequisites
@@ -45,7 +54,7 @@ RUN apt-get update && apt-get install -y \
 #	&& pecl install redis-2.2.8 \
 #	&& docker-php-ext-enable apcu memcached redis
 
-ENV OWNCLOUD_VERSION 9.1.2
+ENV OWNCLOUD_VERSION 9.1.4
 VOLUME /var/www/html
 
 RUN curl -k -fsSL -o owncloud.tar.bz2 \
@@ -61,7 +70,9 @@ RUN curl -k -fsSL -o owncloud.tar.bz2 \
 	&& tar -xjf owncloud.tar.bz2 -C /var/www/ \
 	&& rm owncloud.tar.bz2
 
+RUN service php7.0-fpm start
+
 COPY docker-entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["php5-fpm", "-F"]
+CMD ["php7.0-fpm", "-F"]
